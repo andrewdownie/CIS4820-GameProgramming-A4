@@ -590,6 +590,7 @@ void draw2D() {
     GLfloat black[] = {0.0, 0.0, 0.0, 1.0};
     GLfloat pink[] = {1, 0, 1, 1.0};
     GLfloat yellow[] = {1, 1, 0, 1.0};
+    GLfloat teal[] = {0, 1, 1, 1.0};
 
     GLfloat gold[] = {1.0, 0.84, 0.0, 1.0};
     GLfloat grey[] = {0.5, 0.5, 0.5, 0.5};
@@ -678,18 +679,27 @@ void draw2D() {
     player_z = player_z * -1;
     player_z = MAP_SIZE_Z - player_z;
 
-    set2Dcolour(black);
+    set2Dcolour(teal);
     Minimap_Mob(player_x, player_z, pixelDim, startLeft, startBottom);
 
     ///
     /// Draw the projectiles
     ///
-    set2Dcolour(pink);
+    set2Dcolour(black);
     
     for(i = 0; i < MAX_PROJECTILES; i++){
         if(projectiles[i].enabled){
             projectile_x = projectiles[i].x * -1;
             projectile_z = projectiles[i].z * -1;
+            projectile_z = MAP_SIZE_Z - projectile_z;
+            Minimap_Mob(projectile_x, projectile_z, pixelDim, startLeft, startBottom);
+        }
+    }
+
+    for(i = 0; i < MOB_COUNT; i++){
+        if(mobProjectiles[i].enabled){
+            projectile_x = mobProjectiles[i].x * -1;
+            projectile_z = mobProjectiles[i].z * -1;
             projectile_z = MAP_SIZE_Z - projectile_z;
             Minimap_Mob(projectile_x, projectile_z, pixelDim, startLeft, startBottom);
         }
