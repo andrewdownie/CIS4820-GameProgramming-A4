@@ -1587,6 +1587,16 @@ void BuildWorldShell(){
         }
     }
 
+
+    ///
+    /// Create the door in the bottom right
+    ///
+    for(z = 0; z < WALL_LENGTH; z++){
+        for(height = 0; height < WALL_HEIGHT; height++){
+            world[WALL_COUNT_X * (WALL_LENGTH + 1)][1 + height][((WALL_COUNT_Z - 1) * (WALL_LENGTH + 1)) + z + 1] = 5;
+        }
+    }
+
 }
 
 
