@@ -382,30 +382,30 @@ void collisionResponse() {
     if(curIndex_x == whiteX && curIndex_z == whiteZ && world[curIndex_x][1][curIndex_z] == 5){
         //TODO: check to make sure the white block isn't outside the map (aka the giant white door)
         world[curIndex_x][1][curIndex_z] = 0;
-        currentHealth++; 
-        printf("The player has found the key! FULL HEALTH\n");
+        currentHealth += 2; 
+        printf("The player has found the key! +2 Health\n");
     }
 
 
     ///: Pickup red cube (teleport enemies)
-    if(curIndex_x == redX && curIndex_z == redZ && world[curIndex_x][curIndex_y][curIndex_z] == 3){
+    if(curIndex_x == redX && curIndex_z == redZ && world[curIndex_x][1][curIndex_z] == 3){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
-        printf("The player has found the red cube!\n");
+        printf("The player has found the red cube! +1 Health\n");
     }
 
     ///: Pickup blue cube (teleport enemies)
-    if(curIndex_x == blueX && curIndex_z == blueZ && world[curIndex_x][curIndex_y][curIndex_z] == 2){
+    if(curIndex_x == blueX && curIndex_z == blueZ && world[curIndex_x][1][curIndex_z] == 2){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
-        printf("The player has found the blue cube!\n");
+        printf("The player has found the blue cube! +1 Health\n");
     }
 
     ///: Pickup green cube (teleport enemies)
-    if(curIndex_x == greenX && curIndex_z == greenZ && world[curIndex_x][curIndex_y][curIndex_z] == 1){
+    if(curIndex_x == greenX && curIndex_z == greenZ && world[curIndex_x][1][curIndex_z] == 1){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
-        printf("The player has found the green cube!\n");
+        printf("The player has found the green cube! +1 Health\n");
     }
 
     if(currentHealth > MAX_HEALTH){
@@ -1223,40 +1223,31 @@ int main(int argc, char** argv)
         /// Spawn the items on the map
         ///
         int indexX, indexZ;
-        int itemX, itemZ;
 
 
         ///Spawn the key
         indexX = rand() % 12 - 1;
         indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
-        world[itemX][1][itemZ] = 5;
-        whiteX = itemX;
-        whiteZ = itemZ;
+        ItemIndexToWorld(indexX, indexZ, &whiteX, &whiteZ);
+        world[whiteX][1][whiteZ] = 5;
 
         ///Spawn the red cube (teleport enemy)
         indexX = rand() % 12 - 1;
         indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
-        world[itemX][1][itemZ] = 3;
-        redX = itemX;
-        redZ = itemZ;
+        ItemIndexToWorld(indexX, indexZ, &redX, &redZ);
+        world[redX][1][redZ] = 3;
 
         ///Spawn the blue cube (block shower)
         indexX = rand() % 12 - 1;
         indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
-        world[itemX][1][itemZ] = 2;
-        blueX = itemX;
-        blueZ = itemZ;
+        ItemIndexToWorld(indexX, indexZ, &blueX, &blueZ);
+        world[blueX][1][blueZ] = 2;
 
         ///Spawn the green cube (teleport player)
         indexX = rand() % 12 - 1;
         indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
-        world[itemX][1][itemZ] = 1;
-        greenX = itemX;
-        greenZ = itemZ;
+        ItemIndexToWorld(indexX, indexZ, &greenX, &greenZ);
+        world[greenX][1][greenZ] = 1;
 
     }
 
