@@ -775,7 +775,7 @@ void update() {
 
 
         ///
-        /// Move projectiles
+        /// Move player projectiles
         ///
         deltaTime = glutGet(GLUT_ELAPSED_TIME) - lastUpdateTime;
         for(i = 0; i < MAX_PROJECTILES; i++){
@@ -820,9 +820,9 @@ void update() {
 
 
                 
-               if(HitPlayer(&(projectiles(i)))){
+               /*if(HitPlayer(&(projectiles[i]))){
                    printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
-               }
+               }*/
             }
         }
 
@@ -869,7 +869,7 @@ void update() {
                     }
                }
 
-               if(HitPlayer(&(projectiles(i)))){
+               if(HitPlayer(&(mobProjectiles[i]))){
                    printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
                }
 
@@ -916,7 +916,27 @@ void update() {
 /// HitPlayer 
 ///         Check whether a projectile hit the player
 int HitPlayer(Projectile *projectile){
-    //..check if we hit the player
+    float plX, plY, plZ;//Player xyz
+    float prX, prY, prZ;//Projectile xyz 
+    float dX, dY, dZ;//Delta xyz
+
+    getViewPosition(&plX, &plY, &plZ);
+
+    prX = projectile->x;
+    prY = projectile->y;
+    prZ = projectile->z;
+
+    dX = abs(plX - prX);
+    dY = abs(plY - prY);
+    dZ = abs(plZ - prZ);
+
+    // x, y and z of the projectile only comes out zero
+    //printf("dX: %f, dY: %f, dZ: %f\n", dX, dY, dZ);
+
+    if(dX < 0.5f && dY < 0.5f && dZ < 0.5f){
+        return 1;
+    }
+
     return 0;
 }
 
