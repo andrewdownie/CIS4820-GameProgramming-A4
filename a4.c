@@ -34,9 +34,9 @@
 #define TARGET_WALL_COUNT 25
 #define MAX_WALL_COUNT 21
 
-#define OUTER_WALL_COLOUR 8
-#define INNER_WALL_COLOUR 1
-#define PILLAR_COLOUR 2
+#define OUTER_WALL_COLOUR 7
+#define INNER_WALL_COLOUR 8
+#define PILLAR_COLOUR 7
 #define FLOOR_COLOUR 7
 
 #define WALL_COUNT_X 6
@@ -720,16 +720,28 @@ void draw2D() {
                 set2Dcolour(yellow);
             }
             else if(world[x][1][z] == INNER_WALL_COLOUR || world[x][2][z] == INNER_WALL_COLOUR){
-                set2Dcolour(green);
+                set2Dcolour(yellow);
             }
-            else if(world[x][1][z] == PILLAR_COLOUR){
-                set2Dcolour(blue);
+            else if(world[x][1][z] == 8){
+                set2Dcolour(yellow);
             }
-            else if(world[x][1][z] == MOB_COLOR){
+            else if(world[x][1][z] == 7){
+                set2Dcolour(orange);
+            }
+            else if(world[x][1][z] == 6){
                 set2Dcolour(pink);
             }
             else if(world[x][1][z] == 5){
                 set2Dcolour(white);
+            }
+            else if(world[x][1][z] == 3){
+                set2Dcolour(red);
+            }
+            else if(world[x][1][z] == 2){
+                set2Dcolour(blue);
+            }
+            else if(world[x][1][z] == 1){
+                set2Dcolour(green);
             }
             else{
                 set2Dcolour(orange);
