@@ -9,6 +9,10 @@
 
 2. Ability Pickups:
     ☐ What are the item pickups?
+        ☐ Red cube (color: 3): teleport enemies somewhere randomly that isn't a wall
+        ☐ White cube (color: 5): the key
+        ☐ Green cube (color: 1): bounce the player into the air, and move them to another point on the map
+        ☐ Blue cube (color: 2): cubes fall from the sky
 
 3. Drawing enemies on the map:
     ☐ Confirm that I'm pretty much done this

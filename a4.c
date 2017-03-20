@@ -1000,6 +1000,9 @@ void mouse(int button, int state, int x, int y) {
 
 }
 
+///
+/// ItemIndexToWorld
+///     Where each map cell has four points. So the item index grid is 12x12.
 void ItemIndexToWorld(int x, int z, int *worldX, int *worldZ){
     int xHalf, zHalf;
     int outX, outZ;
@@ -1097,12 +1100,6 @@ int main(int argc, char** argv)
         MAP_SIZE_Z = (WALL_COUNT_Z * WALL_LENGTH) + WALL_COUNT_Z + 2;
 
         
-        ///
-        /// Spawn the items on the map
-        ///
-        int tstX, tstZ;
-        ItemIndexToWorld(5, 3, &tstX, &tstZ);
-       printf("new x %d, new z %d\n", tstX, tstZ); 
 
 
         ///
@@ -1172,6 +1169,37 @@ int main(int argc, char** argv)
             DrawMob(&(mobs[i]));
         } 
 
+
+        ///
+        /// Spawn the items on the map
+        ///
+        int indexX, indexZ;
+        int itemX, itemZ;
+
+
+        ///Spawn the key
+        indexX = rand() % 12 - 1;
+        indexZ = rand() % 12 - 1;
+        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
+        world[itemX][1][itemZ] = 5;
+
+        ///Spawn the red cube (teleport enemy)
+        indexX = rand() % 12 - 1;
+        indexZ = rand() % 12 - 1;
+        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
+        world[itemX][1][itemZ] = 3;
+
+        ///Spawn the blue cube (block shower)
+        indexX = rand() % 12 - 1;
+        indexZ = rand() % 12 - 1;
+        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
+        world[itemX][1][itemZ] = 2;
+
+        ///Spawn the green cube (teleport player)
+        indexX = rand() % 12 - 1;
+        indexZ = rand() % 12 - 1;
+        ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
+        world[itemX][1][itemZ] = 1;
 
     }
 
