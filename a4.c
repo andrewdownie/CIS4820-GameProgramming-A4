@@ -67,13 +67,15 @@ int MAP_SIZE_Z;
 ///
 /// Player settings ---------------------------------------
 ///
+#define HEART_BLINKS_UPON_HIT 5
 #define INVULNERBILITY_TIME 3
 #define GRAVITY_RATE 9.8f
 #define PLAYER_HEIGHT 2
 #define MAX_HEALTH 4
 int currentHealth = MAX_HEALTH;
 // How many milliseconds since the player got hit by a projectile
-int timeSinceBeingHit;
+int timeSinceHeartBlink;
+int heartBlinkCount = 0;
 // Wheather or not the player can currenlty take damage
 int invulnerble = 0;
 
@@ -478,7 +480,7 @@ void draw2D() {
     GLfloat green[] = {0.0, 0.5, 0.0, MINIMAP_TRANSPARENCY};
     GLfloat blue[] = {0.0, 0.0, 0.5, MINIMAP_TRANSPARENCY};
     GLfloat red[] = {0.5, 0.0, 0.0, MINIMAP_TRANSPARENCY};
-    GLfloat heart_red[] = {0.5, 0.0, 0.0, 0.5};
+    GLfloat heart_red[] = {0.5, 0.0, 0.0, 1.0};
     GLfloat white[] = {1, 1, 1, 1};
     GLfloat black[] = {0.0, 0.0, 0.0, 1.0};
     GLfloat yellow[] = {1, 0, 1, 1.0};
@@ -644,16 +646,32 @@ void draw2D() {
     ///
     /// Draw Player Hearts
     ///
+    if(invulnerble && timeSinceHeartBlink > 970){
+        heartBlinkCount++;
+        timeSinceHeartBlink = 0;
+        if(heartBlinkCount >= HEART_BLINKS_UPON_HIT){
+            invulnerble = 0;
+        }
+    }
+
+    if(invulnerble && heartBlinkCount % 2 == 0){
+        set2Dcolour(black);
+    }
+    else{
+        set2Dcolour(heart_red);
+    }
+
     heartStartY = screenHeight - 10;
-    set2Dcolour(heart_red);
     for(i = 0; i < currentHealth; i++){
         heartStartX = 10 + (i * 45);
+
         //Top left piece
         draw2Dtriangle(heartStartX + 10, heartStartY, heartStartX, heartStartY - 10, heartStartX + 20, heartStartY - 10);
         //Top right piece
         draw2Dtriangle(heartStartX + 30, heartStartY, heartStartX + 20, heartStartY - 10, heartStartX + 40, heartStartY - 10);
         //Bottom piece
         draw2Dtriangle(heartStartX, heartStartY - 10, heartStartX + 20, heartStartY - 40, heartStartX + 40, heartStartY - 10);
+        
     }
 
 
@@ -822,6 +840,8 @@ void update() {
                 
                /*if(HitPlayer(&(projectiles[i]))){
                    printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
+                    projectiles[i].enabled = 0;
+                    hideMob(projectiles[i].mobID);
                }*/
             }
         }
@@ -871,6 +891,12 @@ void update() {
 
                if(HitPlayer(&(mobProjectiles[i]))){
                    printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
+                   invulnerble = 1;
+                   timeSinceHeartBlink = 0;
+                   heartBlinkCount = 0;
+                   currentHealth--;
+                    mobProjectiles[i].enabled = 0;
+                    hideMob(i + MAX_PROJECTILES);
                }
 
 
@@ -906,7 +932,9 @@ void update() {
 
 
 
-        timeSinceBeingHit += glutGet(GLUT_ELAPSED_TIME);
+
+
+        timeSinceHeartBlink += glutGet(GLUT_ELAPSED_TIME);
         lastUpdateTime = glutGet(GLUT_ELAPSED_TIME);
         collisionResponse();
     }
@@ -920,6 +948,10 @@ int HitPlayer(Projectile *projectile){
     float prX, prY, prZ;//Projectile xyz 
     float dX, dY, dZ;//Delta xyz
 
+    if(invulnerble){
+        return 0;
+    }
+
     getViewPosition(&plX, &plY, &plZ);
 
     prX = projectile->x;
@@ -929,9 +961,6 @@ int HitPlayer(Projectile *projectile){
     dX = abs(plX - prX);
     dY = abs(plY - prY);
     dZ = abs(plZ - prZ);
-
-    // x, y and z of the projectile only comes out zero
-    //printf("dX: %f, dY: %f, dZ: %f\n", dX, dY, dZ);
 
     if(dX < 0.5f && dY < 0.5f && dZ < 0.5f){
         return 1;

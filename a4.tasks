@@ -13,7 +13,7 @@
         ☐ Add the enemies projectiles to the minimap
 
 4. Player health:
-    ☐ Hit detection for the player being hit by a projectile
+    ✔ Hit detection for the player being hit by a projectile @done (2017-03-20, 12:13:31 PM)
     ☐ Make the players hearts flash when hit,
         ☐ Make it so the player is invulnerable when their hearts are flashing
     ☐ (? - What happens when a players health reaches zero?)
