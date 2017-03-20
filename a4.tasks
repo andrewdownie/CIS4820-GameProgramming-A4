@@ -16,8 +16,8 @@
         ✔ Green cube (color: 1): bounce the player into the air, and move them to another point on the map @done (2017-03-20, 2:29:49 PM)
         ✔ Blue cube (color: 2): cubes fall from the sky @done (2017-03-20, 2:29:49 PM)
     ✔ Make it so the game detects you picking up each of the cubes @done (2017-03-20, 3:00:46 PM)
-    ☐ Make the key draw a 2D key icon on the players screen
-    ☐ Make the red cube teleport enemies
+    ✔ Make the key draw a 2D key icon on the players screen @done (2017-03-20, 6:28:38 PM)
+    ✔ Make the red cube teleport enemies @done (2017-03-20, 6:28:40 PM)
     ☐ Make the green cube bounce the player across the map
     ☐ Make the blue cube create a block shower
 
