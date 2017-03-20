@@ -1,4 +1,6 @@
 1. Locked exit door, key, and resetting the map:
+    Let's get going:
+        ☐ Draw a 2D key icon
     ☐ Locked white exit door, that only opens when they player has the key.
     ☐ Key placed on the map, that they player can pickup
         ☐ (? - Put the item block in the corner of each square of the map, so mobs don't run over them?)
@@ -14,8 +16,9 @@
 
 4. Player health:
     ✔ Hit detection for the player being hit by a projectile @done (2017-03-20, 12:13:31 PM)
-    ☐ Make the players hearts flash when hit,
-        ☐ Make it so the player is invulnerable when their hearts are flashing
-    ☐ (? - What happens when a players health reaches zero?)
+    ✔ Make the players hearts flash when hit, @done (2017-03-20, 12:44:19 PM)
+        ✔ Make it so the player is invulnerable when their hearts are flashing @done (2017-03-20, 12:44:22 PM)
+    ☐ (? - What happens when a players health reaches zero?) :: I'm thinking restart the level, the same way you restart it when you win
+    ☐ Make the hearts scale with screen size
 
 

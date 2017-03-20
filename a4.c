@@ -67,11 +67,11 @@ int MAP_SIZE_Z;
 ///
 /// Player settings ---------------------------------------
 ///
-#define HEART_BLINKS_UPON_HIT 10
+#define HEART_BLINKS_UPON_HIT 20
 #define INVULNERBILITY_TIME 3
 #define GRAVITY_RATE 9.8f
 #define PLAYER_HEIGHT 2
-#define MAX_HEALTH 4
+#define MAX_HEALTH 6
 int currentHealth = MAX_HEALTH;
 // How many milliseconds since the player got hit by a projectile
 int lastHeartBlinkTime;
@@ -677,6 +677,7 @@ void draw2D() {
 
 
 }
+
 
 void Minimap_Mob(float x, float z, int pixelDim, int startLeft, int startBottom){
     int start_x, end_x, start_y, end_y;
