@@ -106,11 +106,14 @@ int lastUpdateTime;
 ///
 #define PROJECTILE_SPAWN_DISTANCE 0.2f 
 #define PROJECTILE_MOVE_SPEED 5.0f
+#define PROJECTILE_DIFFICULTY_SPEED_INCREASE 1.0f
 #define PROJECTILE_LIFE_MILI 6000
 #define MAX_PROJECTILES 3 
 void Shoot();
 int HitPlayer(Projectile *projectile);
 Projectile projectiles[MAX_PROJECTILES];
+
+int actualMobProjectileSpeed;
 
 
 
@@ -530,6 +533,7 @@ void collisionResponse() {
     /// Leave the level
     ///
     if(hasKey && curIndex_x >= 36 && world[curIndex_x][1][curIndex_z] == 5){
+        printf("Player beat the level, increasing difficulty, and resetting world\n");
         ResetWorld(INCREASE_DIFFICULTY);
     } 
 
@@ -544,7 +548,13 @@ void collisionResponse() {
 void ResetWorld(int increaseDifficulty){
     int x, y, z;
 
-    printf("Restart the game\n");
+    if(increaseDifficulty){
+        actualMobProjectileSpeed += PROJECTILE_DIFFICULTY_SPEED_INCREASE;
+    }
+    else{
+        actualMobProjectileSpeed = PROJECTILE_MOVE_SPEED;
+    }
+
     hasKey = 0;
     currentHealth = MAX_HEALTH;
 
@@ -1254,6 +1264,7 @@ int main(int argc, char** argv)
 
     } else {
 
+        actualMobProjectileSpeed = PROJECTILE_MOVE_SPEED;
         flycontrol = 0;
 
         ///
@@ -1675,9 +1686,9 @@ void MobShoot(int ID){
     mobProjectiles[ID].timeEnabled = 0;
 
 
-    mobProjectiles[ID].moveX = -(mobs[ID].startX + playerX + 1) / 5;
-    mobProjectiles[ID].moveY = -(playerY + MOB_HEIGHT + 2) / 5; 
-    mobProjectiles[ID].moveZ = -(mobs[ID].startZ + playerZ + 1) / 5;
+    mobProjectiles[ID].moveX = -(mobs[ID].startX + playerX + 1) / 25 * actualMobProjectileSpeed;
+    mobProjectiles[ID].moveY = -(playerY + MOB_HEIGHT + 2) / 25 * actualMobProjectileSpeed; 
+    mobProjectiles[ID].moveZ = -(mobs[ID].startZ + playerZ + 1) / 25 * actualMobProjectileSpeed;
 
 
 
