@@ -1,6 +1,8 @@
 1. Locked exit door, key, and resetting the map:
     Let's get going:
         ☐ Draw a 2D key icon
+        ☐ Make the detect when the player has the key, and is touching the exit door
+        ☐ Figure out what happens when you touch the exit door with the key..
     ☐ Locked white exit door, that only opens when they player has the key.
     ☐ Key placed on the map, that they player can pickup
         ☐ (? - Put the item block in the corner of each square of the map, so mobs don't run over them?)
@@ -13,6 +15,7 @@
         ✔ White cube (color: 5): the key @done (2017-03-20, 2:29:49 PM)
         ✔ Green cube (color: 1): bounce the player into the air, and move them to another point on the map @done (2017-03-20, 2:29:49 PM)
         ✔ Blue cube (color: 2): cubes fall from the sky @done (2017-03-20, 2:29:49 PM)
+    ✔ Make it so the game detects you picking up each of the cubes @done (2017-03-20, 3:00:46 PM)
     ☐ Make the key draw a 2D key icon on the players screen
     ☐ Make the red cube teleport enemies
     ☐ Make the green cube bounce the player across the map

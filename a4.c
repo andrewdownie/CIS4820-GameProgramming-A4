@@ -78,6 +78,7 @@ int lastHeartBlinkTime;
 int heartBlinkCount = 0;
 // Wheather or not the player can currenlty take damage
 int invulnerble = 0;
+int hasKey = 0;
 
 
 
@@ -383,6 +384,7 @@ void collisionResponse() {
         //TODO: check to make sure the white block isn't outside the map (aka the giant white door)
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth += 2; 
+        hasKey = 1;
         printf("The player has found the key! +2 Health\n");
     }
 
@@ -411,6 +413,14 @@ void collisionResponse() {
     if(currentHealth > MAX_HEALTH){
         currentHealth = MAX_HEALTH;
     }
+
+
+    ///
+    /// Leave the level
+    ///
+    if(hasKey && curIndex_x >= 36 && world[curIndex_x][1][curIndex_z] == 5){
+        printf("Restart the game\n");
+    } 
 
     ///
     /// PLAYER MOVEMENT: Collision with walls and floors and ceiling
