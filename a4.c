@@ -70,6 +70,8 @@ int MAP_SIZE_Z;
 ///
 #define GRAVITY_RATE 9.8f
 #define PLAYER_HEIGHT 2
+#define MAX_HEALTH 4
+int currentHealth = MAX_HEALTH;
 
 
 
@@ -469,6 +471,7 @@ void draw2D() {
     GLfloat green[] = {0.0, 0.5, 0.0, MINIMAP_TRANSPARENCY};
     GLfloat blue[] = {0.0, 0.0, 0.5, MINIMAP_TRANSPARENCY};
     GLfloat red[] = {0.5, 0.0, 0.0, MINIMAP_TRANSPARENCY};
+    GLfloat heart_red[] = {0.5, 0.0, 0.0, 0.5};
     GLfloat white[] = {1, 1, 1, 1};
     GLfloat black[] = {0.0, 0.0, 0.0, 1.0};
     GLfloat yellow[] = {1, 0, 1, 1.0};
@@ -493,6 +496,13 @@ void draw2D() {
 
     float map_ratio;
     int projectileCount;
+
+
+    ///
+    /// Health variables
+    ///
+    int heartStartX;
+    int heartStartY;
 
 
 
@@ -623,6 +633,17 @@ void draw2D() {
 
         draw2Dbox( 5 + i * 2 * pixelDim, 5, 2 * pixelDim + i * 2 * pixelDim, 5 + pixelDim * 5);
     }
+
+    ///
+    /// Draw Player Hearts
+    ///
+    heartStartX = 10;
+    heartStartY = screenHeight - 10;
+    //draw2Dtriangle(int x1, int y1, int x2, int y2, int x3, int y3);
+    set2Dcolour(heart_red);
+    draw2Dtriangle(heartStartX + 10, heartStartY, heartStartX, heartStartY - 10, heartStartX + 20, heartStartY - 10);
+    draw2Dtriangle(heartStartX + 30, heartStartY, heartStartX + 20, heartStartY - 10, heartStartX + 40, heartStartY - 10);
+    draw2Dtriangle(heartStartX, heartStartY - 10, heartStartX + 20, heartStartY - 40, heartStartX + 40, heartStartY - 10);
 
 
 
