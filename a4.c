@@ -1043,7 +1043,10 @@ void update() {
         }
 
 
-
+        if(currentHealth <= 0){
+            printf("The player has died, setting diffculty to default, and resetting world\n");
+            ResetWorld(SET_DIFFICULTY_TO_ZERO);
+        }
 
 
         lastUpdateTime = glutGet(GLUT_ELAPSED_TIME);
