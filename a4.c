@@ -219,6 +219,8 @@ int PercentChance(float chance);
 int Pillar_WallCount();
 int CountAllWalls();
 
+void ItemIndexToWorld(int x, int z, int *worldX, int * worldZ);
+
 
 ///
 /// Engine extern declarations ----------------------------
@@ -998,6 +1000,32 @@ void mouse(int button, int state, int x, int y) {
 
 }
 
+void ItemIndexToWorld(int x, int z, int *worldX, int *worldZ){
+    int xHalf, zHalf;
+    int outX, outZ;
+
+    xHalf = x / 2;
+    zHalf = z / 2;
+
+    outX = 4 * xHalf + 2 * xHalf; 
+    outZ = 4 * zHalf + 2 * zHalf;
+
+
+    if(x % 2 != 0){
+        outX += 4;
+    }
+
+    if(z % 2 != 0){
+        outZ += 4;
+    }
+
+    outX++;
+    outZ++;
+
+    (*worldX) = outX;
+    (*worldZ) = outZ;
+
+}
 
 
 int main(int argc, char** argv)
@@ -1069,6 +1097,12 @@ int main(int argc, char** argv)
         MAP_SIZE_Z = (WALL_COUNT_Z * WALL_LENGTH) + WALL_COUNT_Z + 2;
 
         
+        ///
+        /// Spawn the items on the map
+        ///
+        int tstX, tstZ;
+        ItemIndexToWorld(5, 3, &tstX, &tstZ);
+       printf("new x %d, new z %d\n", tstX, tstZ); 
 
 
         ///
