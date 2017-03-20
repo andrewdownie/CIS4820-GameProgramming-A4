@@ -204,6 +204,15 @@ void PlaceWalls(int deltaTime);
 void BuildWorldShell();
 
 
+///
+/// Item pickup locations
+///
+int redX, redZ;
+int blueX, blueZ;
+int greenX, greenZ;
+int whiteX, whiteZ;
+
+
 
 ///
 /// Utility function forward delcarations -----------------
@@ -314,6 +323,8 @@ void collisionResponse() {
     int floorLevel;
 
 
+
+
     ///
     /// Clamp camera rotation
     ///
@@ -362,6 +373,44 @@ void collisionResponse() {
     previousPiece = WalkablePiece(oldIndex_x, oldIndex_y, oldIndex_z);
     currentPiece = WalkablePiece(curIndex_x, curIndex_y, curIndex_z);
 
+
+    ///
+    /// Pickup items
+    ///
+
+    ///: Pickup the key
+    if(curIndex_x == whiteX && curIndex_z == whiteZ && world[curIndex_x][1][curIndex_z] == 5){
+        //TODO: check to make sure the white block isn't outside the map (aka the giant white door)
+        world[curIndex_x][1][curIndex_z] = 0;
+        currentHealth++; 
+        printf("The player has found the key! FULL HEALTH\n");
+    }
+
+
+    ///: Pickup red cube (teleport enemies)
+    if(curIndex_x == redX && curIndex_z == redZ && world[curIndex_x][curIndex_y][curIndex_z] == 3){
+        world[curIndex_x][1][curIndex_z] = 0;
+        currentHealth++; 
+        printf("The player has found the red cube!\n");
+    }
+
+    ///: Pickup blue cube (teleport enemies)
+    if(curIndex_x == blueX && curIndex_z == blueZ && world[curIndex_x][curIndex_y][curIndex_z] == 2){
+        world[curIndex_x][1][curIndex_z] = 0;
+        currentHealth++; 
+        printf("The player has found the blue cube!\n");
+    }
+
+    ///: Pickup green cube (teleport enemies)
+    if(curIndex_x == greenX && curIndex_z == greenZ && world[curIndex_x][curIndex_y][curIndex_z] == 1){
+        world[curIndex_x][1][curIndex_z] = 0;
+        currentHealth++; 
+        printf("The player has found the green cube!\n");
+    }
+
+    if(currentHealth > MAX_HEALTH){
+        currentHealth = MAX_HEALTH;
+    }
 
     ///
     /// PLAYER MOVEMENT: Collision with walls and floors and ceiling
@@ -1182,24 +1231,32 @@ int main(int argc, char** argv)
         indexZ = rand() % 12 - 1;
         ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
         world[itemX][1][itemZ] = 5;
+        whiteX = itemX;
+        whiteZ = itemZ;
 
         ///Spawn the red cube (teleport enemy)
         indexX = rand() % 12 - 1;
         indexZ = rand() % 12 - 1;
         ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
         world[itemX][1][itemZ] = 3;
+        redX = itemX;
+        redZ = itemZ;
 
         ///Spawn the blue cube (block shower)
         indexX = rand() % 12 - 1;
         indexZ = rand() % 12 - 1;
         ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
         world[itemX][1][itemZ] = 2;
+        blueX = itemX;
+        blueZ = itemZ;
 
         ///Spawn the green cube (teleport player)
         indexX = rand() % 12 - 1;
         indexZ = rand() % 12 - 1;
         ItemIndexToWorld(indexX, indexZ, &itemX, &itemZ);
         world[itemX][1][itemZ] = 1;
+        greenX = itemX;
+        greenZ = itemZ;
 
     }
 

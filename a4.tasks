@@ -8,21 +8,26 @@
         ☐ (? - Is this as simple as throwing main into a function, clearing all variables, and calling what main does again?)
 
 2. Ability Pickups:
-    ☐ What are the item pickups?
-        ☐ Red cube (color: 3): teleport enemies somewhere randomly that isn't a wall
-        ☐ White cube (color: 5): the key
-        ☐ Green cube (color: 1): bounce the player into the air, and move them to another point on the map
-        ☐ Blue cube (color: 2): cubes fall from the sky
+    ✔ What are the item pickups? @done (2017-03-20, 2:29:47 PM)
+        ✔ Red cube (color: 3): teleport enemies somewhere randomly that isn't a wall @done (2017-03-20, 2:29:48 PM)
+        ✔ White cube (color: 5): the key @done (2017-03-20, 2:29:49 PM)
+        ✔ Green cube (color: 1): bounce the player into the air, and move them to another point on the map @done (2017-03-20, 2:29:49 PM)
+        ✔ Blue cube (color: 2): cubes fall from the sky @done (2017-03-20, 2:29:49 PM)
+    ☐ Make the key draw a 2D key icon on the players screen
+    ☐ Make the red cube teleport enemies
+    ☐ Make the green cube bounce the player across the map
+    ☐ Make the blue cube create a block shower
+
 
 3. Drawing enemies on the map:
     ☐ Confirm that I'm pretty much done this
-        ☐ Add the enemies projectiles to the minimap
+    ☐ Add the enemies projectiles to the minimap
 
 4. Player health:
     ✔ Hit detection for the player being hit by a projectile @done (2017-03-20, 12:13:31 PM)
     ✔ Make the players hearts flash when hit, @done (2017-03-20, 12:44:19 PM)
         ✔ Make it so the player is invulnerable when their hearts are flashing @done (2017-03-20, 12:44:22 PM)
     ☐ (? - What happens when a players health reaches zero?) :: I'm thinking restart the level, the same way you restart it when you win
-    ☐ Make the hearts scale with screen size
+    ☐ Make the hearts scale with screen size (not sure I'm gonna do this)
 
 
