@@ -67,10 +67,16 @@ int MAP_SIZE_Z;
 ///
 /// Player settings ---------------------------------------
 ///
+#define INVULNERBILITY_TIME 3
 #define GRAVITY_RATE 9.8f
 #define PLAYER_HEIGHT 2
 #define MAX_HEALTH 4
 int currentHealth = MAX_HEALTH;
+// How many milliseconds since the player got hit by a projectile
+int timeSinceBeingHit;
+// Wheather or not the player can currenlty take damage
+int invulnerble = 0;
+
 
 
 
@@ -100,7 +106,9 @@ int lastUpdateTime;
 #define PROJECTILE_LIFE_MILI 6000
 #define MAX_PROJECTILES 3 
 void Shoot();
+int HitPlayer(Projectile *projectile);
 Projectile projectiles[MAX_PROJECTILES];
+
 
 
 ///
@@ -783,7 +791,7 @@ void update() {
                 projectiles[i].x = curX;
                 projectiles[i].y = curY;
                 projectiles[i].z = curZ;
-                
+
 
 
                 setMobPosition(mobID, projectiles[i].x * -1, projectiles[i].y * - 1, projectiles[i].z * -1, 0);
@@ -795,23 +803,26 @@ void update() {
                     hideMob(projectiles[i].mobID);
                 }
 
-                
-               intX = (int)(curX * -1 + 0.5f);
-               intY = (int)(curY * -1 + 0.5f);
-               intZ = (int)(curZ * -1 + 0.5f); 
-               if(intX >= 0 && intX < WORLDX && intY >= 0 && intY < WORLDY && intZ >= 0 && intZ < WORLDZ){
-                if(world[intX][intY][intZ] != EMPTY_PIECE){
-                    projectiles[i].enabled = 0;
-                    hideMob(projectiles[i].mobID);
-                    if(world[intX][intY][intZ] == INNER_WALL_COLOUR){
 
-                    world[intX][intY][intZ] = 0;
+                intX = (int)(curX * -1 + 0.5f);
+                intY = (int)(curY * -1 + 0.5f);
+                intZ = (int)(curZ * -1 + 0.5f); 
+                if(intX >= 0 && intX < WORLDX && intY >= 0 && intY < WORLDY && intZ >= 0 && intZ < WORLDZ){
+                    if(world[intX][intY][intZ] != EMPTY_PIECE){
+                        projectiles[i].enabled = 0;
+                        hideMob(projectiles[i].mobID);
+                        if(world[intX][intY][intZ] == INNER_WALL_COLOUR){
+
+                            world[intX][intY][intZ] = 0;
+                        }
                     }
                 }
-               }
 
 
                 
+               if(HitPlayer(&(projectiles(i)))){
+                   printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
+               }
             }
         }
 
@@ -848,14 +859,18 @@ void update() {
                intY = (int)(curY * -1 + 0.5f);
                intZ = (int)(curZ * -1 + 0.5f); 
                if(intX >= 0 && intX < WORLDX && intY >= 0 && intY < WORLDY && intZ >= 0 && intZ < WORLDZ){
-                if(world[intX][intY][intZ] != EMPTY_PIECE){
-                    mobProjectiles[i].enabled = 0;
-                    hideMob(i + MAX_PROJECTILES);
-                    if(world[intX][intY][intZ] == INNER_WALL_COLOUR){
+                    if(world[intX][intY][intZ] != EMPTY_PIECE){
+                        mobProjectiles[i].enabled = 0;
+                        hideMob(i + MAX_PROJECTILES);
+                        if(world[intX][intY][intZ] == INNER_WALL_COLOUR){
 
-                        world[intX][intY][intZ] = 0;
+                            world[intX][intY][intZ] = 0;
+                        }
                     }
-                }
+               }
+
+               if(HitPlayer(&(projectiles(i)))){
+                   printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
                }
 
 
@@ -891,9 +906,18 @@ void update() {
 
 
 
+        timeSinceBeingHit += glutGet(GLUT_ELAPSED_TIME);
         lastUpdateTime = glutGet(GLUT_ELAPSED_TIME);
         collisionResponse();
     }
+}
+
+///
+/// HitPlayer 
+///         Check whether a projectile hit the player
+int HitPlayer(Projectile *projectile){
+    //..check if we hit the player
+    return 0;
 }
 
 
@@ -2413,6 +2437,7 @@ void Shoot(){
     getViewPosition(&playerX, &playerY, &playerZ);
     getViewOrientation(&rotX, &rotY, &rotZ);
     
+
 
     projectiles[projectileInsert].enabled = 1;
     projectiles[projectileInsert].timeEnabled = 0;

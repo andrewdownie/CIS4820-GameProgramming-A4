@@ -10,7 +10,7 @@
 
 3. Drawing enemies on the map:
     ☐ Confirm that I'm pretty much done this
-    ☐ Add the enemies projectiles to the minimap
+        ☐ Add the enemies projectiles to the minimap
 
 4. Player health:
     ☐ Hit detection for the player being hit by a projectile
