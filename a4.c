@@ -12,7 +12,6 @@
 
 
 
-
 ///
 /// Includes ----------------------------------------------
 ///
@@ -638,12 +637,14 @@ void draw2D() {
     /// Draw Player Hearts
     ///
     heartStartY = screenHeight - 10;
-    //draw2Dtriangle(int x1, int y1, int x2, int y2, int x3, int y3);
     set2Dcolour(heart_red);
     for(i = 0; i < currentHealth; i++){
         heartStartX = 10 + (i * 45);
+        //Top left piece
         draw2Dtriangle(heartStartX + 10, heartStartY, heartStartX, heartStartY - 10, heartStartX + 20, heartStartY - 10);
+        //Top right piece
         draw2Dtriangle(heartStartX + 30, heartStartY, heartStartX + 20, heartStartY - 10, heartStartX + 40, heartStartY - 10);
+        //Bottom piece
         draw2Dtriangle(heartStartX, heartStartY - 10, heartStartX + 20, heartStartY - 40, heartStartX + 40, heartStartY - 10);
     }
 

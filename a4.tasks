@@ -1,0 +1,21 @@
+1. Locked exit door, key, and resetting the map:
+    ☐ Locked white exit door, that only opens when they player has the key.
+    ☐ Key placed on the map, that they player can pickup
+        ☐ (? - Put the item block in the corner of each square of the map, so mobs don't run over them?)
+    ☐ Resetting the map
+        ☐ (? - Is this as simple as throwing main into a function, clearing all variables, and calling what main does again?)
+
+2. Ability Pickups:
+    ☐ What are the item pickups?
+
+3. Drawing enemies on the map:
+    ☐ Confirm that I'm pretty much done this
+    ☐ Add the enemies projectiles to the minimap
+
+4. Player health:
+    ☐ Hit detection for the player being hit by a projectile
+    ☐ Make the players hearts flash when hit,
+        ☐ Make it so the player is invulnerable when their hearts are flashing
+    ☐ (? - What happens when a players health reaches zero?)
+
+
