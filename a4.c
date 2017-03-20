@@ -67,7 +67,7 @@ int MAP_SIZE_Z;
 ///
 /// Player settings ---------------------------------------
 ///
-#define HEART_BLINKS_UPON_HIT 20
+#define HEART_BLINKS_UPON_HIT 16 
 #define INVULNERBILITY_TIME 3
 #define GRAVITY_RATE 9.8f
 #define PLAYER_HEIGHT 2
@@ -188,6 +188,7 @@ void MoveMob(Mob *mob);
 void EraseMob(Mob *mob);
 void DrawMob(Mob *mob);
 void MobShoot(int projectileID);
+void TeleportMobs();
 
 ///
 /// Wall and floor manipulation forward declarations ------
@@ -230,6 +231,8 @@ int Pillar_WallCount();
 int CountAllWalls();
 
 void ItemIndexToWorld(int x, int z, int *worldX, int * worldZ);
+void SpawnItems();
+void SetupEverything();
 
 
 ///
@@ -415,12 +418,6 @@ void collisionResponse() {
     }
 
 
-    ///
-    /// Leave the level
-    ///
-    if(hasKey && curIndex_x >= 36 && world[curIndex_x][1][curIndex_z] == 5){
-        printf("Restart the game\n");
-    } 
 
     ///
     /// PLAYER MOVEMENT: Collision with walls and floors and ceiling
@@ -519,6 +516,27 @@ void collisionResponse() {
         curPos_y = oldPos_y;
         curPos_z = oldPos_z;
     }
+
+
+    ///
+    /// Leave the level
+    ///
+    if(hasKey && curIndex_x >= 36 && world[curIndex_x][1][curIndex_z] == 5){
+        printf("Restart the game\n");
+        hasKey = 0;
+        currentHealth = MAX_HEALTH;
+        // 1. use the mob teleport to move the mobs to a new spot.
+        // 2. Figure out how to regenerate the walls.
+        curPos_x = -1;
+        curPos_y = -2;
+        curPos_z = -1;
+
+        world[redX][1][redZ] = 0;
+        world[blueX][1][blueZ] = 0;
+        world[greenX][1][greenZ] = 0;
+        SpawnItems();
+        TeleportMobs();
+    } 
 
 
     ///
@@ -735,7 +753,19 @@ void draw2D() {
         
     }
 
+    ///
+    /// Draw the key
+    ///
+    set2Dcolour(white);
+    int startKeyX = screenWidth - 40;
+    int startKeyY = 10;
+    if(hasKey){
 
+        draw2Dbox(startKeyX, startKeyY, startKeyX + 15, startKeyY + 60);
+        draw2Dbox(startKeyX - 15, startKeyY + 80, startKeyX + 30, startKeyY + 50);
+        draw2Dbox(startKeyX - 15, startKeyY, startKeyX + 15, startKeyY + 10);
+        draw2Dbox(startKeyX - 10, startKeyY + 20, startKeyX + 15, startKeyY + 30);
+    }
 
 }
 
@@ -1030,6 +1060,26 @@ int HitPlayer(Projectile *projectile){
     return 0;
 }
 
+void TeleportMobs(){
+    int i;
+    int randX, randZ, x, z;
+
+    for(i = 0; i < MOB_COUNT; i++){
+        randX = rand() % 6 - 1;
+        randZ = rand() % 6 - 1; 
+
+        x = randX * (WALL_LENGTH + 1) + 2;
+        z = randZ * (WALL_LENGTH + 1) + 2;
+
+        //EraseMob(&(mobs[i]));
+
+        mobs[i].startX = x;
+        mobs[i].endX = x;
+        mobs[i].startZ = z;
+        mobs[i].endZ = z;
+    }
+}
+
 
 
 ///
@@ -1142,122 +1192,7 @@ int main(int argc, char** argv)
         createPlayer(0, 52.0, 27.0, 52.0, 0.0);
 
     } else {
-
-        flycontrol = 0;
-
-        ///
-        /// initialize random
-        ///
-        srand((unsigned) time(NULL));
-
-        ///
-        /// Set lastUpdateTime to zero
-        ///
-        lastGravityTime = 0;
-
-        MAP_SIZE_X = (WALL_COUNT_X * WALL_LENGTH) + WALL_COUNT_X + 2;
-        MAP_SIZE_Z = (WALL_COUNT_Z * WALL_LENGTH) + WALL_COUNT_Z + 2;
-
-        
-
-
-        ///
-        /// Build the initial world
-        ///
-        BuildWorldShell();
-        SetupWalls();
-        PlaceWalls(0);
-
-        printf("Wall count: %d\n", CountAllWalls());
-
-
-        ///
-        /// Create the player projectiles
-        for(i = 0; i < MAX_PROJECTILES; i++){
-            createMob(i, i, 5.0, 1.0, 0.0);
-            hideMob(i);
-            projectiles[i].mobID = i;
-        }
-
-        for(i = 0; i < MOB_COUNT; i++){
-            createMob(i + MAX_PROJECTILES, i + MAX_PROJECTILES, 5.0, 1.0, 0.0);
-            hideMob(i + MAX_PROJECTILES);
-            mobProjectiles[i].mobID = i + MAX_PROJECTILES;
-        }
-
-        ///
-        /// Setup the mobs
-        ///
-        mobs[0].type = 0;
-        mobs[0].startX = 8;
-        mobs[0].startZ = 8;
-        mobs[0].endX = 8;
-        mobs[0].endZ = 8;
-        mobs[0].frame = 0;
-        mobs[0].projectileIndex = MAX_PROJECTILES;
-
-        mobs[1].type = 0;
-        mobs[1].startX = 32;
-        mobs[1].startZ = 2;
-        mobs[1].endX = 32;
-        mobs[1].endZ = 2;
-        mobs[1].frame = 0;
-        mobs[1].projectileIndex = MAX_PROJECTILES + 1;
-
-        mobs[2].type = 1;
-        mobs[2].startX = 2;
-        mobs[2].startZ = 32;
-        mobs[2].endX = 2;
-        mobs[2].endZ = 32;
-        mobs[2].frame = 0;
-        mobs[2].projectileIndex = MAX_PROJECTILES + 2;
-
-        mobs[3].type = 1;
-        mobs[3].startX = 32;
-        mobs[3].startZ = 32;
-        mobs[3].endX = 32;
-        mobs[3].endZ = 32;
-        mobs[3].frame = 0;
-        mobs[3].projectileIndex = MAX_PROJECTILES + 3;
-
-        mobFrameTimePassed = 0;
-        ///
-        /// Create the mobs
-        ///
-        for(i = 0; i < MOB_COUNT; i++){
-            DrawMob(&(mobs[i]));
-        } 
-
-
-        ///
-        /// Spawn the items on the map
-        ///
-        int indexX, indexZ;
-
-
-        ///Spawn the key
-        indexX = rand() % 12 - 1;
-        indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &whiteX, &whiteZ);
-        world[whiteX][1][whiteZ] = 5;
-
-        ///Spawn the red cube (teleport enemy)
-        indexX = rand() % 12 - 1;
-        indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &redX, &redZ);
-        world[redX][1][redZ] = 3;
-
-        ///Spawn the blue cube (block shower)
-        indexX = rand() % 12 - 1;
-        indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &blueX, &blueZ);
-        world[blueX][1][blueZ] = 2;
-
-        ///Spawn the green cube (teleport player)
-        indexX = rand() % 12 - 1;
-        indexZ = rand() % 12 - 1;
-        ItemIndexToWorld(indexX, indexZ, &greenX, &greenZ);
-        world[greenX][1][greenZ] = 1;
+        SetupEverything();
 
     }
 
@@ -1269,6 +1204,131 @@ int main(int argc, char** argv)
     glutMainLoop();
     FreeWalls();
     return 0;
+}
+
+void SetupEverything(){
+    int i;
+
+    flycontrol = 0;
+
+    ///
+    /// initialize random
+    ///
+    srand((unsigned) time(NULL));
+
+    ///
+    /// Set lastUpdateTime to zero
+    ///
+    lastGravityTime = 0;
+
+    MAP_SIZE_X = (WALL_COUNT_X * WALL_LENGTH) + WALL_COUNT_X + 2;
+    MAP_SIZE_Z = (WALL_COUNT_Z * WALL_LENGTH) + WALL_COUNT_Z + 2;
+
+    
+
+
+    ///
+    /// Build the initial world
+    ///
+    BuildWorldShell();
+    SetupWalls();
+    PlaceWalls(0);
+
+    printf("Wall count: %d\n", CountAllWalls());
+
+
+    ///
+    /// Create the player projectiles
+    for(i = 0; i < MAX_PROJECTILES; i++){
+        createMob(i, i, 5.0, 1.0, 0.0);
+        hideMob(i);
+        projectiles[i].mobID = i;
+    }
+
+    for(i = 0; i < MOB_COUNT; i++){
+        createMob(i + MAX_PROJECTILES, i + MAX_PROJECTILES, 5.0, 1.0, 0.0);
+        hideMob(i + MAX_PROJECTILES);
+        mobProjectiles[i].mobID = i + MAX_PROJECTILES;
+    }
+
+    ///
+    /// Setup the mobs
+    ///
+    mobs[0].type = 0;
+    mobs[0].startX = 8;
+    mobs[0].startZ = 8;
+    mobs[0].endX = 8;
+    mobs[0].endZ = 8;
+    mobs[0].frame = 0;
+    mobs[0].projectileIndex = MAX_PROJECTILES;
+
+    mobs[1].type = 0;
+    mobs[1].startX = 32;
+    mobs[1].startZ = 2;
+    mobs[1].endX = 32;
+    mobs[1].endZ = 2;
+    mobs[1].frame = 0;
+    mobs[1].projectileIndex = MAX_PROJECTILES + 1;
+
+    mobs[2].type = 1;
+    mobs[2].startX = 2;
+    mobs[2].startZ = 32;
+    mobs[2].endX = 2;
+    mobs[2].endZ = 32;
+    mobs[2].frame = 0;
+    mobs[2].projectileIndex = MAX_PROJECTILES + 2;
+
+    mobs[3].type = 1;
+    mobs[3].startX = 32;
+    mobs[3].startZ = 32;
+    mobs[3].endX = 32;
+    mobs[3].endZ = 32;
+    mobs[3].frame = 0;
+    mobs[3].projectileIndex = MAX_PROJECTILES + 3;
+
+    mobFrameTimePassed = 0;
+    ///
+    /// Create the mobs
+    ///
+    for(i = 0; i < MOB_COUNT; i++){
+        DrawMob(&(mobs[i]));
+    } 
+
+    SpawnItems();
+
+}
+
+void SpawnItems(){
+
+    ///
+    /// Spawn the items on the map
+    ///
+    int indexX, indexZ;
+
+
+    ///Spawn the key
+    indexX = rand() % 12 - 1;
+    indexZ = rand() % 12 - 1;
+    ItemIndexToWorld(indexX, indexZ, &whiteX, &whiteZ);
+    world[whiteX][1][whiteZ] = 5;
+
+    ///Spawn the red cube (teleport enemy)
+    indexX = rand() % 12 - 1;
+    indexZ = rand() % 12 - 1;
+    ItemIndexToWorld(indexX, indexZ, &redX, &redZ);
+    world[redX][1][redZ] = 3;
+
+    ///Spawn the blue cube (block shower)
+    indexX = rand() % 12 - 1;
+    indexZ = rand() % 12 - 1;
+    ItemIndexToWorld(indexX, indexZ, &blueX, &blueZ);
+    world[blueX][1][blueZ] = 2;
+
+    ///Spawn the green cube (teleport player)
+    indexX = rand() % 12 - 1;
+    indexZ = rand() % 12 - 1;
+    ItemIndexToWorld(indexX, indexZ, &greenX, &greenZ);
+    world[greenX][1][greenZ] = 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

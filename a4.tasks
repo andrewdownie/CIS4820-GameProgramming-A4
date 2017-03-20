@@ -33,4 +33,11 @@
     ☐ (? - What happens when a players health reaches zero?) :: I'm thinking restart the level, the same way you restart it when you win
     ☐ Make the hearts scale with screen size (not sure I'm gonna do this)
 
+TODO:
+    ☐ Add projectile speed modifier for mobs (to make game harder each play through)
+    
+
+BUGS:
+    ☐ If you walk east towards an item pickup, instead of picking up the item, you just get elastic banded out of reach
+
 
