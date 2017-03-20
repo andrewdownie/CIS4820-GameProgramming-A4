@@ -67,14 +67,14 @@ int MAP_SIZE_Z;
 ///
 /// Player settings ---------------------------------------
 ///
-#define HEART_BLINKS_UPON_HIT 5
+#define HEART_BLINKS_UPON_HIT 10
 #define INVULNERBILITY_TIME 3
 #define GRAVITY_RATE 9.8f
 #define PLAYER_HEIGHT 2
 #define MAX_HEALTH 4
 int currentHealth = MAX_HEALTH;
 // How many milliseconds since the player got hit by a projectile
-int timeSinceHeartBlink;
+int lastHeartBlinkTime;
 int heartBlinkCount = 0;
 // Wheather or not the player can currenlty take damage
 int invulnerble = 0;
@@ -646,15 +646,15 @@ void draw2D() {
     ///
     /// Draw Player Hearts
     ///
-    if(invulnerble && timeSinceHeartBlink > 970){
+    if(invulnerble && glutGet(GLUT_ELAPSED_TIME) - lastHeartBlinkTime > 100){
         heartBlinkCount++;
-        timeSinceHeartBlink = 0;
+        lastHeartBlinkTime = glutGet(GLUT_ELAPSED_TIME);
         if(heartBlinkCount >= HEART_BLINKS_UPON_HIT){
             invulnerble = 0;
         }
     }
 
-    if(invulnerble && heartBlinkCount % 2 == 0){
+    if(invulnerble && heartBlinkCount % 2 != 0){
         set2Dcolour(black);
     }
     else{
@@ -892,7 +892,7 @@ void update() {
                if(HitPlayer(&(mobProjectiles[i]))){
                    printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
                    invulnerble = 1;
-                   timeSinceHeartBlink = 0;
+                   lastHeartBlinkTime = 0;
                    heartBlinkCount = 0;
                    currentHealth--;
                     mobProjectiles[i].enabled = 0;
@@ -934,7 +934,6 @@ void update() {
 
 
 
-        timeSinceHeartBlink += glutGet(GLUT_ELAPSED_TIME);
         lastUpdateTime = glutGet(GLUT_ELAPSED_TIME);
         collisionResponse();
     }
