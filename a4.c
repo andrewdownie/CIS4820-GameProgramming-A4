@@ -1068,37 +1068,41 @@ void TeleportMobs(){
     int randX, randZ, x, z;
     
 
-    randX = rand() % 3 - 1;
-    randZ = rand() % 3 - 1; 
+    randX = rand() % 3;
+    randZ = rand() % 3; 
     x = (randX) * (WALL_LENGTH + 1) + 2;
     z = (randZ) * (WALL_LENGTH + 1) + 2;
+    //printf("NEWMOB: %d, %d (%d, %d)\n", x, z, randX, randZ);
     mobs[0].startX = x;
     mobs[0].endX = x;
     mobs[0].startZ = z;
     mobs[0].endZ = z;
 
-    randX = rand() % 3 - 1;
-    randZ = rand() % 3 - 1; 
-    x = (randX + 2) * (WALL_LENGTH + 1) + 2;
+    randX = rand() % 3;
+    randZ = rand() % 3; 
+    x = (randX + 3) * (WALL_LENGTH + 1) + 2;
     z = (randZ) * (WALL_LENGTH + 1) + 2;
+    //printf("NEWMOB: %d, %d (%d, %d)\n", x, z, randX, randZ);
     mobs[1].startX = x;
     mobs[1].endX = x;
     mobs[1].startZ = z;
     mobs[1].endZ = z;
 
-    randX = rand() % 3 - 1;
-    randZ = rand() % 3 - 1; 
+    randX = rand() % 3;
+    randZ = rand() % 3; 
     x = (randX) * (WALL_LENGTH + 1) + 2;
-    z = (randZ + 2) * (WALL_LENGTH + 1) + 2;
+    z = (randZ + 3) * (WALL_LENGTH + 1) + 2;
+    //printf("NEWMOB: %d, %d (%d, %d)\n", x, z, randX, randZ);
     mobs[2].startX = x;
     mobs[2].endX = x;
     mobs[2].startZ = z;
     mobs[2].endZ = z;
 
-    randX = rand() % 3 - 1;
-    randZ = rand() % 3 - 1; 
-    x = (randX + 2) * (WALL_LENGTH + 1) + 2;
-    z = (randZ + 2) * (WALL_LENGTH + 1) + 2;
+    randX = rand() % 3;
+    randZ = rand() % 3; 
+    x = (randX + 3) * (WALL_LENGTH + 1) + 2;
+    z = (randZ + 3) * (WALL_LENGTH + 1) + 2;
+    //printf("NEWMOB: %d, %d (%d, %d)\n", x, z, randX, randZ);
     mobs[3].startX = x;
     mobs[3].endX = x;
     mobs[3].startZ = z;
