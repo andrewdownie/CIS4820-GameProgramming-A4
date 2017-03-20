@@ -691,6 +691,9 @@ void draw2D() {
             else if(world[x][1][z] == MOB_COLOR){
                 set2Dcolour(yellow);
             }
+            else if(world[x][1][z] == 5){
+                set2Dcolour(white);
+            }
             else{
                 set2Dcolour(red);
             }
@@ -759,8 +762,8 @@ void draw2D() {
     set2Dcolour(white);
     int startKeyX = screenWidth - 40;
     int startKeyY = 10;
-    if(hasKey){
 
+    if(hasKey){
         draw2Dbox(startKeyX, startKeyY, startKeyX + 15, startKeyY + 60);
         draw2Dbox(startKeyX - 15, startKeyY + 80, startKeyX + 30, startKeyY + 50);
         draw2Dbox(startKeyX - 15, startKeyY, startKeyX + 15, startKeyY + 10);
@@ -1061,23 +1064,61 @@ int HitPlayer(Projectile *projectile){
 }
 
 void TeleportMobs(){
-    int i;
+    int i, j, k;
     int randX, randZ, x, z;
+    
 
-    for(i = 0; i < MOB_COUNT; i++){
-        randX = rand() % 6 - 1;
-        randZ = rand() % 6 - 1; 
+    randX = rand() % 3 - 1;
+    randZ = rand() % 3 - 1; 
+    x = (randX) * (WALL_LENGTH + 1) + 2;
+    z = (randZ) * (WALL_LENGTH + 1) + 2;
+    mobs[0].startX = x;
+    mobs[0].endX = x;
+    mobs[0].startZ = z;
+    mobs[0].endZ = z;
 
-        x = randX * (WALL_LENGTH + 1) + 2;
-        z = randZ * (WALL_LENGTH + 1) + 2;
+    randX = rand() % 3 - 1;
+    randZ = rand() % 3 - 1; 
+    x = (randX + 2) * (WALL_LENGTH + 1) + 2;
+    z = (randZ) * (WALL_LENGTH + 1) + 2;
+    mobs[1].startX = x;
+    mobs[1].endX = x;
+    mobs[1].startZ = z;
+    mobs[1].endZ = z;
 
-        //EraseMob(&(mobs[i]));
+    randX = rand() % 3 - 1;
+    randZ = rand() % 3 - 1; 
+    x = (randX) * (WALL_LENGTH + 1) + 2;
+    z = (randZ + 2) * (WALL_LENGTH + 1) + 2;
+    mobs[2].startX = x;
+    mobs[2].endX = x;
+    mobs[2].startZ = z;
+    mobs[2].endZ = z;
 
-        mobs[i].startX = x;
-        mobs[i].endX = x;
-        mobs[i].startZ = z;
-        mobs[i].endZ = z;
-    }
+    randX = rand() % 3 - 1;
+    randZ = rand() % 3 - 1; 
+    x = (randX + 2) * (WALL_LENGTH + 1) + 2;
+    z = (randZ + 2) * (WALL_LENGTH + 1) + 2;
+    mobs[3].startX = x;
+    mobs[3].endX = x;
+    mobs[3].startZ = z;
+    mobs[3].endZ = z;
+
+    printf("Done teleporting mobs\n");
+
+    for(i = 0; i < WORLDX; i++){
+        for(j = 0; j < 10; j++){
+            for(k = 0; k < WORLDZ; k++){
+
+                if(world[i][j][k] == MOB_COLOR){
+                    world[i][j][k] = 0;
+                }
+
+            }
+        }
+    } 
+
+    printf("Done clearing old mobs\n");
 }
 
 
