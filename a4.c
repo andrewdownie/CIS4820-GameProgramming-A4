@@ -81,6 +81,7 @@ int lastHeartBlinkTime;
 int heartBlinkCount = 0;
 // Wheather or not the player can currenlty take damage
 int invulnerble = 0;
+int goingUp = 0;//Whether the player is flying through the air, because of a cube
 int hasKey = 0;
 
 
@@ -333,6 +334,7 @@ void collisionResponse() {
     float oldPos_x, oldPos_y, oldPos_z;
 
     float rotX, rotY, rotZ;
+    int x, y;
 
     float deltaGravity;
     int previousPiece;
@@ -342,30 +344,6 @@ void collisionResponse() {
 
 
 
-    ///
-    /// Clamp camera rotation
-    ///
-    getViewOrientation(&rotX, &rotY, &rotZ);
-
-    rotX = remainderf(rotX, 360);
-
-    if(rotX < -180){
-        rotX = rotX + 180;
-    }
-
-
-    if(rotX > -100 && rotX < -40){
-        rotX = -40;
-    }
-
-
-    if(rotX > 30){
-        rotX = 30;
-    }
-
-    
-
-    setViewOrientation(rotX, rotY, rotZ);
 
 
 
@@ -389,6 +367,36 @@ void collisionResponse() {
 
     previousPiece = WalkablePiece(oldIndex_x, oldIndex_y, oldIndex_z);
     currentPiece = WalkablePiece(curIndex_x, curIndex_y, curIndex_z);
+
+    ///
+    /// Clamp camera rotation
+    ///
+    if(curIndex_y < 4){
+
+        getViewOrientation(&rotX, &rotY, &rotZ);
+
+        rotX = remainderf(rotX, 360);
+
+    
+        if(rotX < -180){
+            rotX = rotX + 180;
+        }
+
+
+        if(rotX > -100 && rotX < -40){
+            rotX = -40;
+        }
+
+
+        if(rotX > 30){
+            rotX = 30;
+        }
+
+        
+
+        setViewOrientation(rotX, rotY, rotZ);
+    }
+
 
 
     ///
@@ -426,10 +434,26 @@ void collisionResponse() {
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
         printf("The player has found the green cube! \n\tWheeeeeeee\n\t+1 Health\n");
+        goingUp = 1;
+
     }
 
     if(currentHealth > MAX_HEALTH){
         currentHealth = MAX_HEALTH;
+    }
+
+
+
+    ///
+    /// Man cannon cube (player flying)
+    ///
+    printf("index y: %d\n", goingUp);
+    if(curIndex_y > 25){
+        goingUp = 0;
+    }
+
+    if(goingUp){
+        curIndex_y += deltaGravity * 3;
     }
 
 
