@@ -44,6 +44,9 @@
 #define WALL_LENGTH 5
 #define WALL_HEIGHT 2
 
+int wallChangeTime;
+int resettingWalls;
+
 
 ///
 /// Minimap settings
@@ -571,6 +574,9 @@ void ResetWorld(int increaseDifficulty){
     TeleportMobs();
 
     setViewPosition(x, y, z);
+
+   // wallChangeTime = 1;
+    //resettingWalls = 10;
 }
 
 
@@ -920,7 +926,7 @@ void update() {
 
             lastWallChangeTime += deltaWallChangeTime;
 
-            if(lastWallChangeTime >= CHANGE_WALLS_TIME_MS){
+            if(lastWallChangeTime >= wallChangeTime){
                 lastWallChangeTime = 0;
                 ChangeWalls();
 
@@ -1080,6 +1086,15 @@ void update() {
             ResetWorld(SET_DIFFICULTY_TO_ZERO);
         }
 
+        ///
+        /// Reset the walls
+        ///
+        if(resettingWalls > 0){
+            resettingWalls--;
+        }
+        if(resettingWalls <= 0){
+            wallChangeTime = CHANGE_WALLS_TIME_MS;
+        }
 
         lastUpdateTime = glutGet(GLUT_ELAPSED_TIME);
         collisionResponse();
@@ -1287,6 +1302,7 @@ int main(int argc, char** argv)
     } else {
 
         actualMobProjectileSpeed = PROJECTILE_MOVE_SPEED;
+        wallChangeTime = wallChangeTime;
         flycontrol = 0;
 
         ///
@@ -1803,6 +1819,18 @@ void BuildWorldShell(){
         }
     }
 
+    ///
+    /// Set pillars to null
+    ///
+    for(x = 0; x < WALL_COUNT_X; x++){
+        for(z = 0; z < WALL_COUNT_Z; z++){
+            pillars[x][z].north = NULL;
+            pillars[x][z].south = NULL;
+            pillars[x][z].east = NULL;
+            pillars[x][z].west = NULL;
+        }
+    }
+
 }
 
 
@@ -1832,18 +1860,6 @@ void SetupWalls(){
     genInfo.spawnChance = (TARGET_WALL_COUNT * 100) / wallCount;
 
 
-    ///
-    /// Set pillars to null
-    ///
-    for(x = 0; x < WALL_COUNT_X; x++){
-        for(z = 0; z < WALL_COUNT_Z; z++){
-            pillars[x][z].north = NULL;
-            pillars[x][z].south = NULL;
-            pillars[x][z].east = NULL;
-            pillars[x][z].west = NULL;
-        }
-    }
-
 
     for(x = 0; x < WALL_COUNT_X - 1; x++){
         for(z = 0; z < WALL_COUNT_Z - 1; z++){
@@ -1862,6 +1878,7 @@ void SetupWalls(){
 
 
             ///
+            ///
             /// South wall
             ///
             if(z < WALL_COUNT_Z){
@@ -1875,6 +1892,7 @@ void SetupWalls(){
 
 
             ///
+            ///
             /// East Wall
             ///
             if(x < WALL_COUNT_X - 1){
@@ -1887,6 +1905,7 @@ void SetupWalls(){
             }
 
 
+            ///
             ///
             /// West Wall
             ///
@@ -1905,6 +1924,8 @@ void SetupWalls(){
 
 
     }
+
+    printf("Done setting up walls\n");
 
     pillars[0][0].west->percentClosed = 0;
     pillars[0][0].west->state = open;
@@ -1979,7 +2000,7 @@ void PlaceVerticalWall(Wall *wall, int wallX, int wallZ, int deltaTime){
     ///
     /// Update the wall using deltaTime
     ///
-    deltaPercent = (((float)deltaTime * 2) / (float)CHANGE_WALLS_TIME_MS) * 100;
+    deltaPercent = (((float)deltaTime * 2) / (float)wallChangeTime) * 100;
     if(wall->state == opening){
         wall->percentClosed -= deltaPercent;
         if(wall->percentClosed < 0){
@@ -2086,7 +2107,7 @@ void PlaceHorizontalWall(Wall *wall, int wallX, int wallZ, int deltaTime){
     ///
     /// Update the wall using deltaTime
     ///
-    deltaPercent = (((float)deltaTime * 2) / (float)CHANGE_WALLS_TIME_MS) * 100;
+    deltaPercent = (((float)deltaTime * 2) / (float)wallChangeTime) * 100;
     if(wall->state == opening){
         wall->percentClosed -= deltaPercent;
 
@@ -2483,7 +2504,10 @@ void SetupWall(Wall **targetWall, Wall **adjacentWall, GenerationInfo *genInfo){
     ///
     /// Malloc the new wall
     ///
-    Wall *newWall = (Wall*)malloc(sizeof(Wall));
+    Wall *newWall; 
+    if(*targetWall == NULL){
+        newWall = (Wall*)malloc(sizeof(Wall));
+    }
     newWall->direction = notMoving;
     genInfo->creationAttempts++;
 
@@ -2501,12 +2525,12 @@ void SetupWall(Wall **targetWall, Wall **adjacentWall, GenerationInfo *genInfo){
         newWall->state = open;
     }
 
+
     ///
     /// Use the spawnChanceModifier to push the spawnChance
     ///         towards spawning the target number of walls
     currentSpawnPercentage = (100 * ((float)genInfo->wallsCreated / (float)genInfo->creationAttempts));
     genInfo->spawnChanceModifier = genInfo->spawnChance - currentSpawnPercentage;
-
 
 
 
@@ -2518,6 +2542,7 @@ void SetupWall(Wall **targetWall, Wall **adjacentWall, GenerationInfo *genInfo){
     if(adjacentWall != NULL){
         *adjacentWall = newWall;
     }
+
 }
 
 
@@ -2670,19 +2695,24 @@ void PrintWallGeneration(){
 int Pillar_WallCount(Pillar *pillar){
 /// Counts the number of walls on a given pillar that are closed.
 
+
     int count = 0;
+
 
     if(pillar->north != NULL && pillar->north->state == closed){
         count++;
     }
 
+
     if(pillar->east != NULL && pillar->east->state == closed){
         count++;
     }
 
+
     if(pillar->south != NULL && pillar->south->state == closed){
         count++;
     }
+
 
     if(pillar->west != NULL && pillar->west->state == closed){
         count++;
