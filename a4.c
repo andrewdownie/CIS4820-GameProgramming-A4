@@ -429,6 +429,7 @@ void collisionResponse() {
         redZ = -1;
     }
 
+
     ///: Pickup blue cube (cube shower)
     if(curIndex_x == blueX && curIndex_z == blueZ && world[curIndex_x][1][curIndex_z] == 2){
         world[curIndex_x][1][curIndex_z] = 0;
