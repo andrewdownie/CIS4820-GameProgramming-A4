@@ -216,6 +216,7 @@ void PlaceVerticalWall(Wall *wall, int wallX, int wallZ, int deltaTime);
 void PlaceWalls(int deltaTime);
 
 void BuildWorldShell();
+void CubeShower();
 
 
 ///
@@ -400,7 +401,7 @@ void collisionResponse() {
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth += 2; 
         hasKey = 1;
-        printf("The player has found the key! +2 Health\n");
+        printf("The player has found the key! \n\t+2 Health");
     }
 
 
@@ -408,22 +409,23 @@ void collisionResponse() {
     if(curIndex_x == redX && curIndex_z == redZ && world[curIndex_x][1][curIndex_z] == 3){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
-        printf("The player has found the red cube! +1 Health\n");
+        printf("The player has found the red cube! \n\tTeleporting enemies\n\t+1 Health\n");
         TeleportMobs();
     }
 
-    ///: Pickup blue cube (teleport enemies)
+    ///: Pickup blue cube (cube shower)
     if(curIndex_x == blueX && curIndex_z == blueZ && world[curIndex_x][1][curIndex_z] == 2){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
-        printf("The player has found the blue cube! +1 Health\n");
+        printf("The player has found the blue cube! \n\tEnjoy the shower\n\t+1 Health\n");
+        CubeShower();
     }
 
-    ///: Pickup green cube (teleport enemies)
+    ///: Pickup green cube (teleport player)
     if(curIndex_x == greenX && curIndex_z == greenZ && world[curIndex_x][1][curIndex_z] == 1){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
-        printf("The player has found the green cube! +1 Health\n");
+        printf("The player has found the green cube! \n\tWheeeeeeee\n\t+1 Health\n");
     }
 
     if(currentHealth > MAX_HEALTH){
@@ -846,6 +848,33 @@ void Minimap_Mob(float x, float z, int pixelDim, int startLeft, int startBottom)
     draw2Dbox(start_x, start_y, end_x, end_y);
 }
 
+void CubeShower(){
+    float playerx, playery, playerz;//Player xyz
+    int plx, ply, plz;
+    int startX, startZ;
+    int x, z;
+    int randY;
+
+    getViewPosition(&playerx, &playery, &playerz);
+    plx = (int)playerx * -1;
+    ply = (int)playery * -1;
+    plz = (int)playerz * -1;
+
+    startX = plx - 3;
+    startZ = plz - 3; 
+
+    for(x = 0; x < 6; x++){
+        for(z = 0; z < 6; z++){
+
+            randY = rand() % 8;
+            world[startX + x][randY + 10][startZ + z] = INNER_WALL_COLOUR; 
+        }
+    }
+
+
+
+}
+
 
 
 ///
@@ -853,7 +882,7 @@ void Minimap_Mob(float x, float z, int pixelDim, int startLeft, int startBottom)
 ///
 void update() {
 /// Background process, it is called when there are no other events.
-    int i;
+    int i, j, k;
     /* sample animation for the test world, don't remove this code */
     /* -demo of animating mobs */
     if (testWorld) {
@@ -927,6 +956,22 @@ void update() {
             lastWallChangeTime += deltaWallChangeTime;
 
             if(lastWallChangeTime >= wallChangeTime){
+                ///
+                /// Make the blocks fall
+                ///
+                for(i = 0; i < WORLDX; i++){
+                    for(j = 1; j < 22; j++){
+                        for(k = 0; k < WORLDZ; k++){
+                            if(world[i][j][k] == INNER_WALL_COLOUR){
+                                if(world[i][j - 1][k] == 0){
+                                    world[i][j][k] = 0;
+                                    world[i][j-1][k] = INNER_WALL_COLOUR;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 lastWallChangeTime = 0;
                 ChangeWalls();
 
@@ -1095,6 +1140,7 @@ void update() {
         if(resettingWalls <= 0){
             wallChangeTime = CHANGE_WALLS_TIME_MS;
         }
+
 
         lastUpdateTime = glutGet(GLUT_ELAPSED_TIME);
         collisionResponse();
@@ -1410,11 +1456,6 @@ void SpawnItems(){
     int indexX, indexZ;
 
 
-    ///Spawn the key
-    indexX = rand() % 12 - 1;
-    indexZ = rand() % 12 - 1;
-    ItemIndexToWorld(indexX, indexZ, &whiteX, &whiteZ);
-    world[whiteX][1][whiteZ] = 5;
 
     ///Spawn the red cube (teleport enemy)
     indexX = rand() % 12 - 1;
@@ -1423,9 +1464,9 @@ void SpawnItems(){
     world[redX][1][redZ] = 3;
 
     ///Spawn the blue cube (block shower)
-    indexX = rand() % 12 - 1;
-    indexZ = rand() % 12 - 1;
-    ItemIndexToWorld(indexX, indexZ, &blueX, &blueZ);
+    indexX = rand() % 10 - 1;
+    indexZ = rand() % 10 - 1;
+    ItemIndexToWorld(indexX + 1, indexZ + 1, &blueX, &blueZ);
     world[blueX][1][blueZ] = 2;
 
     ///Spawn the green cube (teleport player)
@@ -1433,6 +1474,12 @@ void SpawnItems(){
     indexZ = rand() % 12 - 1;
     ItemIndexToWorld(indexX, indexZ, &greenX, &greenZ);
     world[greenX][1][greenZ] = 1;
+
+    ///Spawn the key
+    indexX = rand() % 12 - 1;
+    indexZ = rand() % 12 - 1;
+    ItemIndexToWorld(indexX, indexZ, &whiteX, &whiteZ);
+    world[whiteX][1][whiteZ] = 5;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
