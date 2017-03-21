@@ -474,17 +474,17 @@ void collisionResponse() {
 
     if(flycontrol == 0 && curIndex_y > 4){
         if(goingEast){
-            curPos_x += deltaGravity / 3;
+            curPos_x += deltaGravity / 2;
         }
         else{
-            curPos_x -= deltaGravity / 3;
+            curPos_x -= deltaGravity / 2;
         }
 
         if(goingNorth){
-            curPos_z += deltaGravity / 3;
+            curPos_z += deltaGravity / 2;
         }
         else{
-            curPos_z -= deltaGravity / 3;
+            curPos_z -= deltaGravity / 2;
         }
     }
 
@@ -1523,7 +1523,7 @@ void SpawnItems(){
     ///Spawn the blue cube (block shower)
     indexX = rand() % 10 - 1;
     indexZ = rand() % 10 - 1;
-    ItemIndexToWorld(indexX + 1, indexZ + 1, &blueX, &blueZ);
+    ItemIndexToWorld(indexX + 2, indexZ + 2, &blueX, &blueZ);
     world[blueX][1][blueZ] = 2;
 
     ///Spawn the green cube (teleport player)
