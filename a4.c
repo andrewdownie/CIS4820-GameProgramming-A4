@@ -82,6 +82,8 @@ int heartBlinkCount = 0;
 // Wheather or not the player can currenlty take damage
 int invulnerble = 0;
 int goingUp = 0;//Whether the player is flying through the air, because of a cube
+int goingNorth = 0;
+int goingEast;
 int hasKey = 0;
 
 
@@ -340,6 +342,8 @@ void collisionResponse() {
     int previousPiece;
     int currentPiece;
     int floorLevel;
+    
+    int random;
 
 
 
@@ -435,6 +439,19 @@ void collisionResponse() {
         currentHealth++; 
         printf("The player has found the green cube! \n\tWheeeeeeee\n\t+1 Health\n");
         goingUp = 1;
+        if(curIndex_x > 15){
+            goingEast = 1;
+        }
+        else{
+            goingEast = 0;
+        }
+
+        if(curIndex_z > 15){
+            goingNorth = 1;
+        }
+        else{
+            goingNorth = 0;
+        }
 
     }
 
@@ -447,15 +464,29 @@ void collisionResponse() {
     ///
     /// Man cannon cube (player flying)
     ///
-    printf("index y: %d\n", goingUp);
     if(curIndex_y > 25){
         goingUp = 0;
     }
 
     if(goingUp){
-        curIndex_y += deltaGravity * 3;
+        curPos_y -= deltaGravity * 3;
     }
 
+    if(flycontrol == 0 && curIndex_y > 4){
+        if(goingEast){
+            curPos_x += deltaGravity / 3;
+        }
+        else{
+            curPos_x -= deltaGravity / 3;
+        }
+
+        if(goingNorth){
+            curPos_z += deltaGravity / 3;
+        }
+        else{
+            curPos_z -= deltaGravity / 3;
+        }
+    }
 
 
     ///
@@ -557,6 +588,7 @@ void collisionResponse() {
     }
 
 
+
     setViewPosition(curPos_x, curPos_y, curPos_z);
     ///
     /// Leave the level
@@ -569,6 +601,7 @@ void collisionResponse() {
 
     lastGravityTime = glutGet(GLUT_ELAPSED_TIME);
 }
+
 
 
 ///
@@ -891,7 +924,7 @@ void CubeShower(){
         for(z = 0; z < 6; z++){
 
             randY = rand() % 8;
-            world[startX + x][randY + 10][startZ + z] = INNER_WALL_COLOUR; 
+            world[startX + x][randY + 5][startZ + z] = INNER_WALL_COLOUR; 
         }
     }
 
