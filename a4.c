@@ -414,6 +414,8 @@ void collisionResponse() {
         currentHealth += 2; 
         hasKey = 1;
         printf("The player has found the key! \n\t+2 Health");
+        whiteX = -1;
+        whiteZ = -1;
     }
 
 
@@ -423,6 +425,8 @@ void collisionResponse() {
         currentHealth++; 
         printf("The player has found the red cube! \n\tTeleporting enemies\n\t+1 Health\n");
         TeleportMobs();
+        redX = -1;
+        redZ = -1;
     }
 
     ///: Pickup blue cube (cube shower)
@@ -431,6 +435,8 @@ void collisionResponse() {
         currentHealth++; 
         printf("The player has found the blue cube! \n\tEnjoy the shower\n\t+1 Health\n");
         CubeShower();
+        blueX = -1;
+        blueZ = -1;
     }
 
     ///: Pickup green cube (teleport player)
@@ -453,6 +459,8 @@ void collisionResponse() {
             goingNorth = 0;
         }
 
+        greenX = -1;
+        greenZ = -1;
     }
 
     if(currentHealth > MAX_HEALTH){
