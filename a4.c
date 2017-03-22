@@ -372,35 +372,6 @@ void collisionResponse() {
     previousPiece = WalkablePiece(oldIndex_x, oldIndex_y, oldIndex_z);
     currentPiece = WalkablePiece(curIndex_x, curIndex_y, curIndex_z);
 
-    ///
-    /// Clamp camera rotation
-    ///
-    if(curIndex_y < 4){
-
-        getViewOrientation(&rotX, &rotY, &rotZ);
-
-        rotX = remainderf(rotX, 360);
-
-    
-        if(rotX < -180){
-            rotX = rotX + 180;
-        }
-
-
-        if(rotX > -100 && rotX < -40){
-            rotX = -40;
-        }
-
-
-        if(rotX > 30){
-            rotX = 30;
-        }
-
-        
-
-        setViewOrientation(rotX, rotY, rotZ);
-    }
-
 
 
     ///
@@ -408,7 +379,7 @@ void collisionResponse() {
     ///
 
     ///: Pickup the key
-    if(curIndex_x == whiteX && curIndex_z == whiteZ && world[curIndex_x][1][curIndex_z] == 5){
+    if(curIndex_x == whiteX && curIndex_z == whiteZ && whiteX > 0 && world[curIndex_x][1][curIndex_z] == 5){
         //TODO: check to make sure the white block isn't outside the map (aka the giant white door)
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth += 2; 
@@ -420,7 +391,7 @@ void collisionResponse() {
 
 
     ///: Pickup red cube (teleport enemies)
-    if(curIndex_x == redX && curIndex_z == redZ && world[curIndex_x][1][curIndex_z] == 3){
+    if(curIndex_x == redX && curIndex_z == redZ && redX > 0 && world[curIndex_x][1][curIndex_z] == 3){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
         printf("The player has found the red cube! \n\tTeleporting enemies\n\t+1 Health\n");
@@ -431,7 +402,7 @@ void collisionResponse() {
 
 
     ///: Pickup blue cube (cube shower)
-    if(curIndex_x == blueX && curIndex_z == blueZ && world[curIndex_x][1][curIndex_z] == 2){
+    if(curIndex_x == blueX && curIndex_z == blueZ && blueX > 0 && world[curIndex_x][1][curIndex_z] == 2){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
         printf("The player has found the blue cube! \n\tEnjoy the shower\n\t+1 Health\n");
@@ -441,7 +412,7 @@ void collisionResponse() {
     }
 
     ///: Pickup green cube (teleport player)
-    if(curIndex_x == greenX && curIndex_z == greenZ && world[curIndex_x][1][curIndex_z] == 1){
+    if(curIndex_x == greenX && curIndex_z == greenZ && greenX > 0 && world[curIndex_x][1][curIndex_z] == 1){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
         printf("The player has found the green cube! \n\tWheeeeeeee\n\t+1 Health\n");
@@ -626,6 +597,8 @@ void ResetWorld(int increaseDifficulty){
         actualMobProjectileSpeed = PROJECTILE_MOVE_SPEED;
     }
 
+    printf("meow \n");
+
     hasKey = 0;
     currentHealth = MAX_HEALTH;
 
@@ -635,13 +608,33 @@ void ResetWorld(int increaseDifficulty){
     y = -2;
     z = -1;
 
-    world[redX][1][redZ] = 0;
-    world[blueX][1][blueZ] = 0;
-    world[greenX][1][greenZ] = 0;
+    printf(" 2nd meow \n");
+
+    if(greenX > 0){
+        world[greenX][1][greenZ] = 0;
+    }
+    if(blueX > 0){
+        world[blueX][1][blueZ] = 0;
+    }
+    if(redX > 0){
+        world[redX][1][redZ] = 0;
+    }
+
+    printf("3rd meow\n");
+
     SpawnItems();
+
+    printf("4th meow\n");
+
     TeleportMobs();
 
+    printf("also meow\n");
+
     setViewPosition(x, y, z);
+
+    goingNorth = 0;
+    goingEast = 0;
+    goingUp = 0;
 
    // wallChangeTime = 1;
     //resettingWalls = 10;

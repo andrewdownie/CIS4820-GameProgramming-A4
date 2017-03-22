@@ -14,6 +14,7 @@
     ✔ SECTION 4 CONFIRMED TO BE DONE @done (2017-03-20, 7:06:52 PM)
 
 BUGS:
-    ☐ If you walk east towards an item pickup, instead of picking up the item, you just get elastic banded out of reach
+    ☐ If you walk around a pillar, you can end up colliding with thin air
+    ☐ Make the falling cubes blue, remove all the blue cubes on level restart
 
 
