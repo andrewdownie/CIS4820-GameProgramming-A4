@@ -221,6 +221,7 @@ void PlaceWalls(int deltaTime);
 void BuildWorldShell();
 void CubeShower();
 void ClearCubeShower();
+void ResetWalls();
 
 
 ///
@@ -380,40 +381,40 @@ void collisionResponse() {
     ///
 
     ///: Pickup the key
-    if(curIndex_x == whiteX && curIndex_z == whiteZ && whiteX > 0 && world[curIndex_x][1][curIndex_z] == 5){
+    if(whiteX > 0 && curIndex_x == whiteX && curIndex_z == whiteZ && world[curIndex_x][1][curIndex_z] == 5){
         //TODO: check to make sure the white block isn't outside the map (aka the giant white door)
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth += 2; 
         hasKey = 1;
         printf("The player has found the key! \n\t+2 Health");
-        whiteX = -1;
-        whiteZ = -1;
+        whiteX = 0;
+        whiteZ = 0;
     }
 
 
     ///: Pickup red cube (teleport enemies)
-    if(curIndex_x == redX && curIndex_z == redZ && redX > 0 && world[curIndex_x][1][curIndex_z] == 3){
+    if(redX > 0 && curIndex_x == redX && curIndex_z == redZ && world[curIndex_x][1][curIndex_z] == 3){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
         printf("The player has found the red cube! \n\tTeleporting enemies\n\t+1 Health\n");
         TeleportMobs();
-        redX = -1;
-        redZ = -1;
+        redX = 0;
+        redZ = 0;
     }
 
 
     ///: Pickup blue cube (cube shower)
-    if(curIndex_x == blueX && curIndex_z == blueZ && blueX > 0 && world[curIndex_x][1][curIndex_z] == 2){
+    if(blueX > 0 && curIndex_x == blueX && curIndex_z == blueZ && world[curIndex_x][1][curIndex_z] == 2){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
         printf("The player has found the blue cube! \n\tEnjoy the shower\n\t+1 Health\n");
         CubeShower();
-        blueX = -1;
-        blueZ = -1;
+        blueX = 0;
+        blueZ = 0;
     }
 
     ///: Pickup green cube (teleport player)
-    if(curIndex_x == greenX && curIndex_z == greenZ && greenX > 0 && world[curIndex_x][1][curIndex_z] == 1){
+    if(greenX > 0 && curIndex_x == greenX && curIndex_z == greenZ && world[curIndex_x][1][curIndex_z] == 1){
         world[curIndex_x][1][curIndex_z] = 0;
         currentHealth++; 
         printf("The player has found the green cube! \n\tWheeeeeeee\n\t+1 Health\n");
@@ -432,8 +433,8 @@ void collisionResponse() {
             goingNorth = 0;
         }
 
-        greenX = -1;
-        greenZ = -1;
+        greenX = 0;
+        greenZ = 0;
     }
 
     if(currentHealth > MAX_HEALTH){
@@ -628,6 +629,8 @@ void ResetWorld(int increaseDifficulty){
     ClearCubeShower();
     SpawnItems();
     TeleportMobs();
+
+    ResetWalls();
 
     setViewPosition(x, y, z);
 
@@ -953,6 +956,12 @@ void CubeShower(){
 
 
 }
+
+
+///
+/// ResetWalls
+///
+void ResetWalls(){}
 
 
 
@@ -1298,7 +1307,6 @@ void TeleportMobs(){
     mobs[3].startZ = z;
     mobs[3].endZ = z;
 
-    printf("Done teleporting mobs\n");
 
     for(i = 0; i < WORLDX; i++){
         for(j = 0; j < 10; j++){
@@ -1312,7 +1320,6 @@ void TeleportMobs(){
         }
     } 
 
-    printf("Done clearing old mobs\n");
 }
 
 
