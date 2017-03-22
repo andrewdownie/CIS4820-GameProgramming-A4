@@ -115,11 +115,11 @@ int lastUpdateTime;
 #define PROJECTILE_DIFFICULTY_SPEED_INCREASE 1.0f
 #define PROJECTILE_LIFE_MILI 6000
 #define MAX_PROJECTILES 3 
-void Shoot();
-int HitPlayer(Projectile *projectile);
 Projectile projectiles[MAX_PROJECTILES];
-
+int HitPlayer(Projectile *projectile);
 int actualMobProjectileSpeed;
+void Shoot();
+
 
 
 
@@ -220,6 +220,7 @@ void PlaceWalls(int deltaTime);
 
 void BuildWorldShell();
 void CubeShower();
+void ClearCubeShower();
 
 
 ///
@@ -597,7 +598,6 @@ void ResetWorld(int increaseDifficulty){
         actualMobProjectileSpeed = PROJECTILE_MOVE_SPEED;
     }
 
-    printf("meow \n");
 
     hasKey = 0;
     currentHealth = MAX_HEALTH;
@@ -608,27 +608,22 @@ void ResetWorld(int increaseDifficulty){
     y = -2;
     z = -1;
 
-    printf(" 2nd meow \n");
 
     if(greenX > 0){
         world[greenX][1][greenZ] = 0;
     }
+
     if(blueX > 0){
         world[blueX][1][blueZ] = 0;
     }
+
     if(redX > 0){
         world[redX][1][redZ] = 0;
     }
 
-    printf("3rd meow\n");
-
+    ClearCubeShower();
     SpawnItems();
-
-    printf("4th meow\n");
-
     TeleportMobs();
-
-    printf("also meow\n");
 
     setViewPosition(x, y, z);
 
@@ -636,9 +631,30 @@ void ResetWorld(int increaseDifficulty){
     goingEast = 0;
     goingUp = 0;
 
-   // wallChangeTime = 1;
-    //resettingWalls = 10;
 }
+
+
+
+///
+/// Clear Cube Shower
+///
+void ClearCubeShower(){
+    int i, j, k;
+
+    for(i = 0; i < WORLDX; i++){
+        for(j = 0; j < WORLDY; j++){
+            for(k = 0; k < WORLDZ; k++){
+
+                if(world[i][j][k] == 2){
+                    world[i][j][k] = 0;
+                }     
+
+            }
+        }
+    }
+
+}
+
 
 
 ///
@@ -926,7 +942,7 @@ void CubeShower(){
         for(z = 0; z < 6; z++){
 
             randY = rand() % 8;
-            world[startX + x][randY + 5][startZ + z] = INNER_WALL_COLOUR; 
+            world[startX + x][randY + 5][startZ + z] = 2; 
         }
     }
 
@@ -1021,10 +1037,10 @@ void update() {
                 for(i = 0; i < WORLDX; i++){
                     for(j = 1; j < 22; j++){
                         for(k = 0; k < WORLDZ; k++){
-                            if(world[i][j][k] == INNER_WALL_COLOUR){
+                            if(world[i][j][k] == 2){
                                 if(world[i][j - 1][k] == 0){
                                     world[i][j][k] = 0;
-                                    world[i][j-1][k] = INNER_WALL_COLOUR;
+                                    world[i][j-1][k] = 2;
                                 }
                             }
                         }
@@ -1083,20 +1099,14 @@ void update() {
                     if(world[intX][intY][intZ] != EMPTY_PIECE){
                         projectiles[i].enabled = 0;
                         hideMob(projectiles[i].mobID);
-                        if(world[intX][intY][intZ] == INNER_WALL_COLOUR){
+                        if(world[intX][intY][intZ] == INNER_WALL_COLOUR || world[intX][intY][intZ] == 2){
 
                             world[intX][intY][intZ] = 0;
                         }
                     }
                 }
 
-
                 
-               /*if(HitPlayer(&(projectiles[i]))){
-                   printf(">> A PROJECTILE HIT THE PLAYER!!!\n");
-                    projectiles[i].enabled = 0;
-                    hideMob(projectiles[i].mobID);
-               }*/
             }
         }
 
@@ -1136,7 +1146,7 @@ void update() {
                     if(world[intX][intY][intZ] != EMPTY_PIECE){
                         mobProjectiles[i].enabled = 0;
                         hideMob(i + MAX_PROJECTILES);
-                        if(world[intX][intY][intZ] == INNER_WALL_COLOUR){
+                        if(world[intX][intY][intZ] == INNER_WALL_COLOUR || world[intX][intY][intZ] == 2){
 
                             world[intX][intY][intZ] = 0;
                         }
@@ -1188,6 +1198,14 @@ void update() {
         if(currentHealth <= 0){
             printf("The player has died, setting diffculty to default, and resetting world\n");
             ResetWorld(SET_DIFFICULTY_TO_ZERO);
+        }
+
+
+        ///
+        /// Replace the blue pickup cube
+        ///
+        if(blueX > 0){
+            world[blueX][1][blueZ] = 2;
         }
 
         ///
