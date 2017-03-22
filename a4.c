@@ -621,6 +621,10 @@ void ResetWorld(int increaseDifficulty){
         world[redX][1][redZ] = 0;
     }
 
+    if(whiteX > 0){
+        world[whiteX][1][whiteZ] = 0;
+    }
+
     ClearCubeShower();
     SpawnItems();
     TeleportMobs();
